@@ -1,46 +1,69 @@
-var API_KEY = "YOUR_API_KEY"
-var cityLocation = "Paris"
-var URL =
-	"https://api.weatherapi.com/v1/current.json?key=" +
-	API_KEY +
-	"&q=" +
-	cityLocation +
-	"&aqi=yes"
+const API_KEY = "776ff3222f9a4d3994a181052250604"; 
+const DEFAULT_CITY = "Paris";
 
-function fetchWeather() {
-	fetch(URL)
-		.then(function (response) {
-			if (response.ok) {
-				return response.json()
-			}
-			throw new Error("Network response was not ok.")
-		})
-		.then(function (data) {
-			console.log(data)
-			var city = data.location.name
-			var temp = data.current.temp_c
-			var icon = data.current.condition.icon
-			var wind = data.current.wind_kph
-			var humidity = data.current.humidity
-			var uv = data.current.uv
-			var feelslike = data.current.feelslike_c
+// Utility function to fetch weather
+const fetchWeather = async (location) => {
+  const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location}&aqi=yes`;
+  try {
+    document.querySelector(".card-title").textContent = "Loading...";
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Network response was not ok.");
+    const data = await response.json();
+    renderWeather(data);
+  } catch (error) {
+    console.error("Fetch error:", error);
+    document.querySelector(".card-title").textContent = "City not found or network error";
+    document.querySelector(".card-img").src = "";
+    document.querySelectorAll(".list-group-item").forEach((el) => (el.textContent = ""));
+  }
+};
 
-			document.querySelector(".card-title").textContent = city
-			//document.querySelector(".card-text").textContent = condition
-			document.querySelector(".card-img").src = icon
-			document.querySelectorAll(".list-group-item")[0].textContent =
-				"Temperature: " + temp + "°C"
-			document.querySelectorAll(".list-group-item")[1].textContent =
-				"Humidity: " + humidity + "%"
-			document.querySelectorAll(".list-group-item")[2].textContent =
-				"Feels like: " + feelslike + "°C"
-			document.querySelectorAll(".list-group-item")[3].textContent =
-				"Wind: " + wind + " km/h"
-			document.querySelectorAll(".list-group-item")[4].textContent = "UV: " + uv
-		})
-		.catch(function (error) {
-			console.error("Fetch error:", error)
-		})
-}
+// Renders weather data to the DOM
+const renderWeather = ({
+  location: { name: city },
+  current: {
+    temp_c: temp,
+    condition: { icon },
+    wind_kph: wind,
+    humidity,
+    uv,
+    feelslike_c: feelslike,
+  },
+}) => {
+  document.querySelector(".card-title").textContent = city;
+  document.querySelector(".card-img").src = icon;
+  const listItems = document.querySelectorAll(".list-group-item");
+  listItems[0].textContent = `Temperature: ${temp}°C`;
+  listItems[1].textContent = `Humidity: ${humidity}%`;
+  listItems[2].textContent = `Wind: ${wind} kph`;
+  listItems[3].textContent = `Feels Like: ${feelslike}°C`;
+  listItems[4].textContent = `UV Index: ${uv}`;
+};
 
-window.onload = fetchWeather
+// Handle manual search
+const handleCitySearch = () => {
+  const city = document.getElementById("cityInput").value.trim();
+  if (city) {
+    fetchWeather(city);
+  }
+};
+
+// Initialize with geolocation or fallback
+const initWeatherApp = () => {
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        fetchWeather(`${latitude},${longitude}`);
+      },
+      (error) => {
+        console.warn("Geolocation error, using default city.");
+        fetchWeather(DEFAULT_CITY);
+      }
+    );
+  } else {
+    fetchWeather(DEFAULT_CITY);
+  }
+};
+
+document.addEventListener("DOMContentLoaded", initWeatherApp);

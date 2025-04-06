@@ -6,30 +6,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <title>Weather stuff</title>
+        <link rel="stylesheet" href="style-modern.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     </head>
 
     <body>
         <section class="container p-4" style="width: 24rem;">
-            <h1 class="text-center">Another weather app ... 🙄</h1>
+            <h1 class="text-center">Eman's Weather App</h1>
+
+  <div style="text-align: center; margin: 20px;">
+    <input type="text" id="cityInput" placeholder="Enter city name" />
+    <button onclick="handleCitySearch()">Search</button>
+  </div>
             <div class="card">
-
-                <div class="card-body">
-                    <div class="d-flex justify-content-center align-items-center">
-
-                        <h5 class="card-title"></h5>
-                        <img src="./Loading_icon.gif" class="card-img" style="width: 25%;" alt="weather icon">
-                    </div>
-                    <ul class="list-group">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        <li class="list-group-item">A third item</li>
-                        <li class="list-group-item">A fourth item</li>
-                        <li class="list-group-item">And a fifth one</li>
-                    </ul>
-                </div>
-            </div>
+                <h2 class="card-title">City</h2>
+                <img class="card-img" src="" alt="Weather Icon">
+                <ul class="list-group">
+                  <li class="list-group-item">Temperature:</li>
+                  <li class="list-group-item">Humidity:</li>
+                  <li class="list-group-item">Wind:</li>
+                  <li class="list-group-item">Feels Like:</li>
+                  <li class="list-group-item">UV Index:</li>
+                </ul>
+              </div>
 
         </section>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
